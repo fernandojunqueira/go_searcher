@@ -13,6 +13,7 @@ type Reader interface {
 	Search(query string) ([]*Participant, error)
 	List() ([]*Participant, error)
 	Update(id string) (string, error)
+	Clean()
 }
 
 type Repository interface {
@@ -20,7 +21,8 @@ type Repository interface {
 }
 
 type UseCase interface {
-	Update(id string) ([]*Participant, error)
+	Update(id string) (string, error)
 	Search(query string) ([]*Participant, error)
 	List() ([]*Participant, error)
+	Clean()
 }
