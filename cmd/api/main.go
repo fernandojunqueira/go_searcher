@@ -1,21 +1,33 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"go_searcher/http/echo"
+	"go_searcher/internal/api"
+	"go_searcher/participant"
+	"go_searcher/participant/sqlite"
+	programapocalipse "go_searcher/program_apocalipse"
 
-	"github.com/thedatashed/xlsxreader"
+	_ "modernc.org/sqlite"
 )
 
 func main() {
-	xl, _ := xlsxreader.OpenFile("./teste.xlsx")
+	db, err := sql.Open("sqlite", "./inscriptions.db")
+	if err != nil {
+		panic(err)
+	}
+	if err != nil {
+		panic(err)
+	}
 
-	defer xl.Close()
-
-	for row := range xl.ReadRows(xl.Sheets[0]) {
-		fmt.Println("id: " + row.Cells[0].Value)
-		fmt.Println("nome: " + row.Cells[1].Value)
-		fmt.Println("presença: " + row.Cells[2].Value)
-
+	repo := sqlite.NewSqlite(db)
+	pService := participant.NewService(repo)
+	cService := programapocalipse.NewService()
+	h := echo.Handlers(pService, cService)
+	err = api.Start("8080", h)
+	if err != nil {
+		fmt.Printf("error running api %s", err)
 	}
 
 }
