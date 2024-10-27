@@ -17,9 +17,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err != nil {
-		panic(err)
-	}
 
 	repo := sqlite.NewSqlite(db)
 	pService := participant.NewService(repo)
